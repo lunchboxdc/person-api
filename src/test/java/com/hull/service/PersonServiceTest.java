@@ -72,7 +72,6 @@ public class PersonServiceTest {
 
         verify(mockCsvReader, times(1)).readPersonCsv(filePath);
         verify(people, times(1)).addAll(any());
-        // todo assert person in list
     }
 
     @Test
@@ -98,9 +97,6 @@ public class PersonServiceTest {
 
         personService.addPerson(testPerson);
         verify(people, times(2)).add(testPerson);
-        // todo revisit
-//        assertThat(mockPeople.size(), is(1));
-//        assertThat(mockPeople.get(1), is(testPerson));
     }
 
     @Test

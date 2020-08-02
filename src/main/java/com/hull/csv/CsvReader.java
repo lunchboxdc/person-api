@@ -4,6 +4,8 @@ import com.hull.domain.Person;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -13,23 +15,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Component
 public class CsvReader {
 
-    private final char COMMA = ',';
-    private final char PIPE = '|';
-    private final char SPACE = ' ';
+    private static final Logger logger = LogManager.getLogger(CsvReader.class);
+
+    private static final char COMMA = ',';
+    private static final char PIPE = '|';
+    private static final char SPACE = ' ';
 
     public List<Person> readPersonCsv(String filePath) {
         Path csvPath = Paths.get(filePath);
         Character separator = getSeparator(csvPath);
 
         if (separator == null) {
-            //log
+            logger.error("No supported separator found for file '{}'", filePath);
         } else {
             try (BufferedReader br = Files.newBufferedReader(csvPath, StandardCharsets.UTF_8)) {
                 HeaderColumnNameMappingStrategy<Person> strategy = new HeaderColumnNameMappingStrategy<>();
@@ -42,14 +44,14 @@ public class CsvReader {
 
                 return csvToBean.parse();
             } catch (Exception e) {
-                Logger.getLogger(CsvReader.class.getName()).log(Level.SEVERE, null, e);
+                logger.error("Error reading csv file '{}'", filePath, e);
             }
         }
 
         return null;
     }
 
-    private Character getSeparator(Path csvPath) {
+    Character getSeparator(Path csvPath) {
         try (Stream<String> lines = Files.lines(csvPath)) {
             Optional<String> headerOptional = lines.findFirst();
             if (!headerOptional.isPresent()) {
@@ -67,7 +69,7 @@ public class CsvReader {
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(CsvReader.class.getName()).log(Level.SEVERE, null, e);
+            logger.error("Error scanning '{}' for a valid separator", csvPath.toString(), e);
         }
 
         return null;

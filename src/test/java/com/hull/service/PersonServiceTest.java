@@ -1,6 +1,6 @@
 package com.hull.service;
 
-import com.hull.config.SpringConfiguration;
+import com.hull.config.TestSpringConfiguration;
 import com.hull.csv.CsvReader;
 import com.hull.domain.Person;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {SpringConfiguration.class})
+@ContextConfiguration(classes = {TestSpringConfiguration.class})
 public class PersonServiceTest {
 
     @InjectMocks

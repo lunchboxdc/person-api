@@ -1,16 +1,50 @@
 package com.hull.api;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.hull.domain.Person;
+import com.hull.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Path("record")
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
+
+@Path("/records")
+@Service
 public class Records {
 
+	@Autowired
+	private PersonService personService;
+
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getRecords() {
-		return "Records\n";
+	@Path("/gender")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllSortedByGender() {
+		List<Person> people = personService.getAllSortedByGender();
+		return Response.status(200).entity(people).build();
+	}
+
+	@GET
+	@Path("/birthdate")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllSortedByBirthDate() {
+		List<Person> people = personService.getAllSortedByBirthDate();
+		return Response.status(200).entity(people).build();
+	}
+
+	@GET
+	@Path("/name")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllSortedByLastName() {
+		List<Person> people = personService.getAllSortedByLastName();
+		return Response.status(200).entity(people).build();
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response postPerson(Person person) {
+		personService.addPerson(person);
+		return Response.status(200).build();
 	}
 }

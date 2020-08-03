@@ -1,6 +1,6 @@
 Requirements
-    jdk v8 or higher
-    mvn v3 or higher
+    `jdk v8 or higher
+    mvn v3 or higher`
 
 Compile and run tests
 
